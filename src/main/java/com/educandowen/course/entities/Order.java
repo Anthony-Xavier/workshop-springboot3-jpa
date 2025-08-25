@@ -1,5 +1,6 @@
 package com.educandowen.course.entities;
 
+import com.educandowen.course.entities.enums.OrderSatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -19,15 +20,18 @@ public class Order implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd'T'HH:mm:ss'Z'",timezone = "GMT")
     private Instant moment;
 
+    private Integer orderSatus;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
 
     public Order(){}
 
-    public Order(Long id, Instant moment, User client) {
+    public Order(Long id, Instant moment, OrderSatus orderSatus, User client) {
         this.id = id;
         this.moment = moment;
+        setOrderSatus(orderSatus);
         this.client = client;
     }
 
@@ -45,6 +49,15 @@ public class Order implements Serializable {
 
     public void setMoment(Instant moment) {
         this.moment = moment;
+    }
+
+    public OrderSatus getOrderSatus() {
+        return OrderSatus.valueOf(orderSatus);
+    }
+
+    public void setOrderSatus(OrderSatus orderSatus) {
+        if(orderSatus != null)
+            this.orderSatus = orderSatus.getCode();
     }
 
     public User getClient() {
